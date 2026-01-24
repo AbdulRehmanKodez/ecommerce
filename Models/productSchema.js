@@ -19,6 +19,11 @@ const productModel = mongoose.Schema(
             required:true,
             maxLength:[8,"max length cannot exceed 8 char"]
         },
+        category:{
+            id: mongoose.Schema.Types.ObjectId,
+            name: String,
+            slug: String
+        },
 
         images:[
             {
@@ -38,6 +43,6 @@ const productModel = mongoose.Schema(
         ]
     }
 )
-const productModels = mongoose.model('model',productModel)
+const productModels = mongoose.model('Product',productModel)
 export default productModels
 

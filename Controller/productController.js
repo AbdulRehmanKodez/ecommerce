@@ -1,5 +1,7 @@
 import productSchema from '../Models/productSchema.js'
-
+import productCatagorys from '../UTILS/catagorySearch.js'
+import Productsearch from '../UTILS/ProductSearch.js'
+import reviewSchema from '../Models/reviewSchema.js'
 export const productCreate = async (req,res,next)=>{
     try{
     const data =  req.body
@@ -40,8 +42,11 @@ export const singleproduct = async (req,res,next)=>{
 
 export const allproduct = async (req,res,next)=>{
     try{
-       const allproduct = await productSchema.find()
-        res.status(200).json({data:allproduct})
+      
+      const searchProduct = new Productsearch(productSchema,req.query.search||"")
+      const searchresult = await searchProduct.search()
+       
+        res.status(200).json({data:searchresult})
     }catch(err){
         res.status(400).json({message:"products nhi mile",error:err
        })
@@ -67,4 +72,47 @@ export const updateProduct = async (req,res,next)=>{
        })
       console.log(err);
     }
+} 
+
+export const productCatagory  = async (req,res,next)=>{
+  try{
+      const searchCatagory = new productCatagorys(productSchema,req.query.category)
+      const catagoryResult = await searchCatagory.searchCatagory()
+      res.status(200).json({catagoryResult})
+
+  }catch(err){
+    res.status(400).json({message:"products catagorys nhi mile",error:err
+       })
+      console.log(err);
+  }
+}
+
+export const reviewControler = async (req,res)=>{
+   try{
+     const  {comment,rating} = req.body
+     const userId = req.user.id
+     const productId = req.params.productid
+      const productexist = await productSchema.findById(productId)
+      if(!productexist){
+        return res.status(404).json({message:"product dosnot exist"})
+      }
+        
+        const alreadyReviewed = await reviewSchema.findOne({
+      userId: userId,
+      productId: productId
+    })
+
+    if (alreadyReviewed) {
+      return res.status(409).json({ message: "Review already exists" })
+    }
+
+       const newReview = new reviewSchema({userId:userId,productId:req.params.productid,comment,rating})
+          const saveReview = await newReview.save()
+          res.status(201).json({message:"review save sucessfully"})
+   }catch(err){
+    res.status(400).json({message:"review me error",error:err
+       })
+      console.log(err);
+  }
+
 }

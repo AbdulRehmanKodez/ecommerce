@@ -1,11 +1,15 @@
-import { singleproduct, productCreate, productDelete, allproduct, updateProduct,} from '../Controller/productController.js'
+import { singleproduct, productCreate, productDelete, allproduct, updateProduct, productCatagory, reviewControler,} from '../Controller/productController.js'
 import express from 'express'
-const router = express.Router()
+import auth from '../Middlewares/auth.js'
 
-router.post('/createproduct',productCreate)
-router.post('/deleteproduct/:id',productDelete)
+const router = express.Router()
+router.use(auth)
+
+
+
 router.get('/singleproduct/:id',singleproduct)
 router.get('/allproduct',allproduct)
-router.put('/updateproduct/:id',updateProduct)
+router.post('/review/:productid',reviewControler)
+router.get('/productCatagory',productCatagory)
 
 export default router
