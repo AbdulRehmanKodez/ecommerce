@@ -1,4 +1,4 @@
-import { singleproduct, productCreate, productDelete, allproduct, updateProduct, productCatagory, reviewControler,} from '../Controller/productController.js'
+import { singleproduct, productCreate, productDelete, allproduct, updateProduct, productCatagory, reviewControler, deleteReview,} from '../Controller/productController.js'
 import express from 'express'
 import auth from '../Middlewares/auth.js'
 
@@ -11,5 +11,5 @@ router.get('/singleproduct/:id',singleproduct)
 router.get('/allproduct',allproduct)
 router.post('/review/:productid',reviewControler)
 router.get('/productCatagory',productCatagory)
-
+router.delete('/reviewdelete/:revid',deleteReview)
 export default router

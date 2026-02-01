@@ -113,6 +113,25 @@ export const reviewControler = async (req,res)=>{
     res.status(400).json({message:"review me error",error:err
        })
       console.log(err);
-  }
-
-}
+  }}
+   
+  export const deleteReview = async(req,res)=>{
+    try{
+      const revID = req.params.revid
+      const userid = req.user.id
+      const review = await reviewSchema.findById(revID);
+      if(!review){
+        return res.status(404).json({message:"review dont exist"})
+      }
+      if(userid.toString() !== review.userId.toString()){
+        return  res.status(403).json({message:"you are not allowed to del this review"})
+      }
+      const revDel = await reviewSchema.findByIdAndDelete(revID)
+      
+      res.status(200).json({message:"review del sucess"})
+    }catch(err){
+    res.status(400).json({message:"reviewdel me error",error:err
+       })
+      console.log(err);
+  }}
+  
